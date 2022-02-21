@@ -122,6 +122,28 @@ DisPoisson<- function(x=list(5)){
     return(list(x,y))
 }
 
+DisNormal<- function(x=list(3,1)){
+    mean = x[[1]]
+    sd = x[[2]]
+    vmax = qnorm(0.99,mean = mean, sd = sd)
+    vmin = qnorm(0.01,mean = mean, sd = sd)
+    x = seq(from=vmin, to=vmax, by=(vmax-vmin)/200)
+    y = dnorm(x,mean = mean, sd = sd)
+    return(list(x,y))
+}
+
+DisT <- function(x=list(3)){
+    df=x[[1]]
+    if(df<0){
+        return('NA')
+    }
+    vmax = qt(0.99,df = df)
+    vmin = qt(0.01,df = df)
+    x = seq(from=vmin, to=vmax, by=(vmax-vmin)/200)
+    y = dt(x,df = df)
+    return(list(x,y))
+}
+
 
 LinePlot = function(input){
     x = input[[1]]
@@ -142,7 +164,7 @@ LinePlot = function(input){
     return(gg)
 }
 
-Dotplot = function(input){
+DotPlot = function(input){
     x = input[[1]]
     y = input[[2]]
     w = input[[3]]
@@ -164,7 +186,7 @@ Dotplot = function(input){
 
 # 输入参数顺序为 分布名，图的长宽，分布参数。 输出为ggplot元素
 PlotDistribution<- function(disname='Gamma',figparam=list(10,5),param=NULL){
-    if (!(disname %in% c('Gamma','Beta','Cauchy','Chisquare','Exponential','Binomial','Geometric','NegBinomial','Poisson'))){
+    if (!(disname %in% c('Gamma','Beta','Cauchy','Chisquare','Exponential','Normal','StudentT','Binomial','Geometric','NegBinomial','Poisson'))){
         return('Not Implemented')
     }
     if (length(param)==0){
@@ -173,6 +195,8 @@ PlotDistribution<- function(disname='Gamma',figparam=list(10,5),param=NULL){
                    'Cauchy'=DisCauchy(),
                    'Chisquare'=DisChisquare(),
                    'Exponential'=DisExponential(),
+                   'Normal'=DisNormal(),
+                   'StudentT'=DisT(),
                    'Binomial'=DisBinomial(),
                    'Geometric'=DisGeometric(),
                    'NegBinomial'=DisNegBinomial(),
@@ -184,17 +208,19 @@ PlotDistribution<- function(disname='Gamma',figparam=list(10,5),param=NULL){
                'Cauchy'=DisCauchy(param),
                'Chisquare'=DisChisquare(param),
                'Exponential'=DisExponential(param),
+               'Normal'=DisNormal(param),
+               'StudentT'=DisT(param),
                'Binomial'=DisBinomial(param),
                'Geometric'=DisGeometric(param),
                'NegBinomial'=DisNegBinomial(param),
                'Poisson'=DisPoisson(param))
     }
     plotparam = list(data[[1]],data[[2]],figparam[[1]],figparam[[2]],disname)
-    if (disname %in% c('Gamma','Beta','Cauchy','Chisquare','Exponential')){
+    if (disname %in% c('Gamma','Beta','Cauchy','Chisquare','Exponential','Normal','StudentT')){
         figure = LinePlot(plotparam)
     }
     else if (disname %in% c('Binomial','Geometric','NegBinomial','Poisson')){
-        figure = Dotplot(plotparam)
+        figure = DotPlot(plotparam)
     }
     return(figure)
 }
