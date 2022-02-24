@@ -9,13 +9,19 @@ library(shinyalert)
 
 shinyUI(fluidPage(theme = shinytheme("cerulean"),
     navbarPage(p(icon("chart-line",lib = "font-awesome"),em("Distribution Viewer"),style="text-align:center"),
-        tabPanel(NULL,
+        tabPanel("Home",
+            h2("It is a online tool to plot pdf of different distirbutions with adjustable parameters.",style="text-align:center"),
+            fluidRow(
+            column(imageOutput("Main"),style="text-align:center",width=8,offset=2)
+            )
+        ),
+        tabPanel("Viewer",
         # Distribution Selection
         fluidRow(
             column(h3("Select the distribution type:",style="text-align:right"),width=5),
             column(selectInput("SI_DT", NULL, 
-                    choices = c("Normal", "Gamma", "Poisson"), 
-                    selected = "Poisson"),width=7)
+                    choices = c("Gamma", "Beta", "Cauchy", "Chisquare", "Exponential", "Normal", "StudentT", "Binomial", "Geometric", "NegBinomial", "Poisson"), 
+                    selected = "Gamma"),width=7)
         ),
         hr(),
         # print the pdf formulation
@@ -39,5 +45,5 @@ shinyUI(fluidPage(theme = shinytheme("cerulean"),
         verbatimTextOutput("TO_Stat")
     )),
     hr(),
-    p(em("Developed by Yixin Chen, MinSheng Hao"),br("XGlab, Tsinghua University, Beijing, China"),style="text-align:center; font-family: times")
+    p(em("Developed by Yixin Chen, MinSheng Hao, Boyang Wang"),br("XGlab, Tsinghua University, Beijing, China"),style="text-align:center; font-family: times")
 ))
